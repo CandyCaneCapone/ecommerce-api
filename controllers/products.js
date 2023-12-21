@@ -1,4 +1,5 @@
 const Product = require("../models/products");
+const NotFoundError = require("../errors/not-found")
 
 const getAllProducts = async (req, res, next) => {
   const { company, search, sort, fields } = req.query;
@@ -43,7 +44,16 @@ const getAllProducts = async (req, res, next) => {
 };
 
 const getSingleProduct = async (req, res, next) => {
-  res.send("get single product")
+  const productId = req.params.id;
+  try {
+    const product = await Product.findById(productId);
+    if(!product) {
+      throw new NotFoundError(`no product found with id ${productId}`)
+    }
+    res.json(product);
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports = {
