@@ -37,7 +37,8 @@ const getAllProducts = async (req, res, next) => {
   
   try {
     const products = await result;
-    res.json({ products });
+    const totalResult = await Product.countDocuments()
+    res.json({ products , totalResult});
   } catch (error) {
     next(error)
   }
